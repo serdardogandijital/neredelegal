@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Destek - nerede?</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.7;
+            color: #1a1a1a;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 50px;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 30px;
+            padding: 10px 20px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .back-link:hover {
+            background: rgba(102, 126, 234, 0.2);
+            transform: translateX(-5px);
+        }
+
+        h1 {
+            color: #667eea;
+            font-size: 42px;
+            margin-bottom: 12px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        h2 {
+            color: #1a1a1a;
+            font-size: 28px;
+            margin-top: 40px;
+            margin-bottom: 16px;
+            font-weight: 700;
+            padding-left: 16px;
+            border-left: 4px solid #667eea;
+        }
+
+        h3 {
+            color: #333;
+            font-size: 20px;
+            margin-top: 28px;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        p {
+            margin-bottom: 16px;
+            color: #555;
+            font-size: 16px;
+            line-height: 1.7;
+        }
+
+        ul, ol {
+            margin-left: 24px;
+            margin-bottom: 20px;
+        }
+
+        li {
+            margin-bottom: 10px;
+            color: #555;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        li strong, p strong {
+            color: #1a1a1a;
+            font-weight: 600;
+        }
+
+        a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: #764ba2;
+            text-decoration: underline;
+        }
+
+        .last-updated {
+            display: inline-block;
+            padding: 8px 16px;
+            color: #666;
+            font-size: 13px;
+            margin-bottom: 30px;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 20px;
+            font-weight: 500;
+        }
+
+        .contact-info {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 28px 32px;
+            border-radius: 16px;
+            margin-top: 30px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .contact-info p {
+            margin-bottom: 10px;
+            color: #555;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 20px 15px;
+            }
+
+            .container {
+                padding: 30px 20px;
+                border-radius: 16px;
+            }
+
+            h1 {
+                font-size: 32px;
+            }
+
+            h2 {
+                font-size: 24px;
+                margin-top: 32px;
+                padding-left: 12px;
+            }
+
+            h3 {
+                font-size: 18px;
+            }
+
+            p, li {
+                font-size: 15px;
+            }
+
+            .back-link {
+                padding: 8px 16px;
+                font-size: 14px;
+            }
+
+            .contact-info {
+                padding: 20px 24px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 28px;
+            }
+
+            h2 {
+                font-size: 20px;
+            }
+
+            .container {
+                padding: 24px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-link">← Ana Sayfaya Dön</a>
+        
+        <h1>Destek ve Yardım</h1>
+        <p class="last-updated">Son Güncelleme: 23 Aralık 2025</p>
+
+        <h2>Bize Ulaşın</h2>
+        <div class="contact-info">
+            <p><strong>E-posta:</strong> <a href="mailto:destek@nerede.app">destek@nerede.app</a></p>
+            <p><strong>Web Sitesi:</strong> <a href="https://serdardogandijital.github.io/neredelegal/">https://serdardogandijital.github.io/neredelegal</a></p>
+        </div>
+
+        <h2>Sık Sorulan Sorular (SSS)</h2>
+
+        <h3>Hesap İşlemleri</h3>
+        <p><strong>S: Hesabımı nasıl silebilirim?</strong></p>
+        <p>C: Uygulama içinde Profil > Ayarlar > Hesabı Sil seçeneğinden hesabınızı silebilirsiniz. Hesap silme işlemi geri alınamaz.</p>
+
+        <p><strong>S: Şifremi unuttum, ne yapmalıyım?</strong></p>
+        <p>C: Giriş ekranında "Şifremi Unuttum" seçeneğini kullanarak e-posta adresinize şifre sıfırlama bağlantısı gönderebilirsiniz.</p>
+
+        <h3>Puan ve Ödüller</h3>
+        <p><strong>S: Puanlarımı nasıl kazanırım?</strong></p>
+        <p>C: Mekanlara check-in yaparak, QR kod tarayarak, kampanyalara katılarak ve arkadaşlarınızı davet ederek puan kazanabilirsiniz.</p>
+
+        <p><strong>S: Puanlarımı gerçek paraya çevirebilir miyim?</strong></p>
+        <p>C: Hayır, puanlar dijital içeriklerdir ve gerçek para ile değiştirilemez. Puanlarınızı indirimler ve özel kampanyalarda kullanabilirsiniz.</p>
+
+        <h3>Teknik Sorunlar</h3>
+        <p><strong>S: Uygulama çöküyor, ne yapmalıyım?</strong></p>
+        <p>C: Lütfen uygulamayı kapatıp yeniden açın. Sorun devam ederse, cihazınızı yeniden başlatın. Hala sorun varsa support@nerede.app adresine e-posta gönderin.</p>
+
+        <p><strong>S: QR kod taramıyor, ne yapmalıyım?</strong></p>
+        <p>C: Kameraya erişim izni verdiğinizden emin olun. Ayarlar > nerede? > Kamera iznini kontrol edin. Sorun devam ederse, cihazınızın kamerasının çalıştığından emin olun.</p>
+
+        <h3>İçerik ve Moderasyon</h3>
+        <p><strong>S: Uygunsuz bir içerik gördüm, ne yapmalıyım?</strong></p>
+        <p>C: İçeriğin yanındaki "..." menüsünden "İçeriği Bildir" seçeneğini kullanarak bildirebilirsiniz. İnceleme 24 saat içinde yapılır.</p>
+
+        <p><strong>S: Bir kullanıcıyı nasıl engelleyebilirim?</strong></p>
+        <p>C: Kullanıcının profilinden veya içeriğinden "..." menüsünden "Kullanıcıyı Engelle" seçeneğini kullanabilirsiniz.</p>
+
+        <h3>Veri ve Gizlilik</h3>
+        <p><strong>S: Verilerimi nasıl silebilirim?</strong></p>
+        <p>C: Hesabınızı silerek tüm verilerinizi silebilirsiniz. KVKK kapsamında veri silme talebi için support@nerede.app adresine e-posta gönderebilirsiniz.</p>
+
+        <p><strong>S: Verilerim nerede saklanıyor?</strong></p>
+        <p>C: Verileriniz Google Firebase sunucularında, Türkiye ve Avrupa bölgelerinde saklanmaktadır. Detaylar için <a href="gizlilik-politikasi.html">Gizlilik Politikası</a>'nı inceleyebilirsiniz.</p>
+
+        <h2>Geri Bildirim</h2>
+        <p>Uygulama hakkında önerileriniz, şikayetleriniz veya sorularınız için support@nerede.app adresine e-posta gönderebilirsiniz. Geri bildirimleriniz bizim için çok değerlidir.</p>
+
+        <h2>Yasal Belgeler</h2>
+        <ul>
+            <li><a href="gizlilik-politikasi.html">Gizlilik Politikası</a></li>
+            <li><a href="kullanim-sartlari.html">Kullanım Şartları</a></li>
+            <li><a href="hesap-silme.html">Hesap Silme</a></li>
+        </ul>
+
+        <div class="contact-info" style="margin-top: 30px;">
+            <p><strong>Yanıt Süresi:</strong> E-posta taleplerinize 48 saat içinde yanıt vermeye çalışıyoruz.</p>
+            <p><strong>Çalışma Saatleri:</strong> Pazartesi - Cuma, 09:00 - 18:00 (Türkiye Saati)</p>
+        </div>
+    </div>
+</body>
+</html>
+
