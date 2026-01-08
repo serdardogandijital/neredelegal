@@ -156,8 +156,8 @@ export default function GizlilikPolitikasi() {
                 </p>
                 <p className="text-gray-700">
                   <strong className="text-gray-900">İletişim:</strong>{' '}
-                  <a href="mailto:destek@nerede.app" className="text-indigo-600 hover:text-indigo-700 font-medium">
-                    destek@nerede.app
+                  <a href="mailto:destek@neredeapp.com.tr" className="text-indigo-600 hover:text-indigo-700 font-medium">
+                    destek@neredeapp.com.tr
                   </a>
                 </p>
               </div>

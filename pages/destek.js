@@ -91,7 +91,7 @@ export default function Destek() {
         },
         {
           q: 'Hesabım neden askıya alındı?',
-          a: 'Kullanım şartlarını ihlal eden davranışlar tespit edildiğinde hesaplar askıya alınabilir. Detaylı bilgi için destek@nerede.app adresine e-posta gönderin.'
+          a: 'Kullanım şartlarını ihlal eden davranışlar tespit edildiğinde hesaplar askıya alınabilir. Detaylı bilgi için destek@neredeapp.com.tr adresine e-posta gönderin.'
         }
       ]
     },
@@ -154,8 +154,8 @@ export default function Destek() {
             <div className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl p-8 text-center hover:shadow-lg transition-shadow border border-indigo-100">
               <div className="text-5xl mb-4">📧</div>
               <h3 className="text-xl font-bold text-gray-900 mb-2">E-posta Desteği</h3>
-              <a href="mailto:destek@nerede.app" className="text-indigo-600 hover:text-indigo-700 font-medium text-lg">
-                destek@nerede.app
+              <a href="mailto:destek@neredeapp.com.tr" className="text-indigo-600 hover:text-indigo-700 font-medium text-lg">
+                destek@neredeapp.com.tr
               </a>
               <p className="text-sm text-gray-600 mt-3">48 saat içinde yanıt veriyoruz</p>
             </div>
@@ -233,7 +233,7 @@ export default function Destek() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a
-                href="mailto:destek@nerede.app"
+                href="mailto:destek@neredeapp.com.tr"
                 className="px-8 py-4 bg-white text-indigo-600 rounded-xl font-semibold hover:bg-gray-100 transition-colors inline-flex items-center justify-center"
               >
                 <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

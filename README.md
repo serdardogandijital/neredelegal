@@ -158,7 +158,7 @@ Dosya yüklemeleri için Firebase Storage kullanılır. Bucket otomatik olarak y
 
 ## 📞 Destek
 
-Sorularınız için: admin@nerede.app
+Sorularınız için: destek@neredeapp.com.tr
 
 ---
 

@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { signInWithEmailAndPassword } from 'firebase/auth';
@@ -58,7 +59,7 @@ export default function Login() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
-              placeholder="admin@nerede.app"
+              placeholder="ornek@email.com"
               required
             />
           </div>
@@ -84,22 +85,13 @@ export default function Login() {
           </button>
         </form>
 
-        <div className="mt-6 pt-6 border-t border-gray-200">
-          <p className="text-sm text-gray-600 text-center mb-3">Demo Hesaplar</p>
-          <div className="space-y-2">
-            <button
-              onClick={() => { setEmail('admin@nerede.app'); setPassword('admin123'); }}
-              className="w-full py-2.5 px-4 border-2 border-indigo-200 rounded-lg hover:bg-indigo-50 hover:border-indigo-300 text-sm font-medium transition-all"
-            >
-              👨‍💼 Admin Demo
-            </button>
-            <button
-              onClick={() => { setEmail('merchant@nerede.app'); setPassword('merchant123'); }}
-              className="w-full py-2.5 px-4 border-2 border-purple-200 rounded-lg hover:bg-purple-50 hover:border-purple-300 text-sm font-medium transition-all"
-            >
-              🏪 İşletme Demo
-            </button>
-          </div>
+        <div className="mt-6 text-center">
+          <p className="text-sm text-gray-600">
+            Hesabınız yok mu?{' '}
+            <Link href="/register" className="text-indigo-600 hover:text-indigo-700 font-semibold">
+              Hemen kayıt olun
+            </Link>
+          </p>
         </div>
       </div>
     </div>

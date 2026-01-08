@@ -351,8 +351,8 @@ export default function SupportPage() {
               <div className="space-y-4">
                 <div>
                   <p className="text-sm font-medium text-gray-700 mb-1">Email</p>
-                  <a href="mailto:destek@nerede.app" className="text-indigo-600 hover:text-indigo-700 text-sm">
-                    destek@nerede.app
+                  <a href="mailto:destek@neredeapp.com.tr" className="text-indigo-600 hover:text-indigo-700 text-sm">
+                    destek@neredeapp.com.tr
                   </a>
                 </div>
 

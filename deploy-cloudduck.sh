@@ -30,5 +30,5 @@ pm2 startup
 echo "✅ Deployment tamamlandı!"
 echo "📊 Durum kontrolü: pm2 status"
 echo "📝 Loglar: pm2 logs nerede-web-admin"
-echo "🌐 Uygulama: http://neredeapp.com.tr:3005"
+echo "🌐 Uygulama: https://neredeapp.com.tr"
 

@@ -3,9 +3,11 @@ import Link from 'next/link';
 import { signOut } from 'firebase/auth';
 import { auth } from '../lib/firebase';
 import toast from 'react-hot-toast';
+import { useState } from 'react';
 
 export default function AdminLayout({ children, user }) {
   const router = useRouter();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const handleLogout = async () => {
     await signOut(auth);
@@ -36,19 +38,31 @@ export default function AdminLayout({ children, user }) {
     <div className="min-h-screen bg-gray-50">
       <nav className="bg-white shadow-md sticky top-0 z-50">
         <div className="mx-auto px-4">
-          <div className="flex justify-between items-center py-2">
-            <div className="flex items-center space-x-4 flex-shrink-0">
+          <div className="flex justify-between items-center py-3">
+            <div className="flex items-center space-x-3 flex-shrink-0">
+              <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="lg:hidden p-2 rounded-lg text-gray-600 hover:bg-gray-100"
+              >
+                <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  {mobileMenuOpen ? (
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  ) : (
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                  )}
+                </svg>
+              </button>
               <Link href="/admin" className="flex items-center hover:opacity-80 transition-opacity">
                 <div className="h-10 w-10 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 rounded-xl flex items-center justify-center shadow-lg">
                   <span className="text-lg font-bold text-white">N</span>
                 </div>
-                <span className="ml-3 text-base font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent whitespace-nowrap">
+                <span className="ml-3 text-base font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent whitespace-nowrap hidden sm:inline">
                   nerede? Admin
                 </span>
               </Link>
             </div>
             
-            <div className="flex-1 mx-4">
+            <div className="flex-1 mx-4 hidden lg:block">
               <div className="flex flex-col gap-1">
                 {/* Üst satır */}
                 <div className="flex space-x-1 justify-center flex-wrap">
@@ -87,14 +101,14 @@ export default function AdminLayout({ children, user }) {
               </div>
             </div>
             
-            <div className="flex items-center space-x-3 flex-shrink-0">
+            <div className="flex items-center space-x-2 flex-shrink-0">
               <div className="text-right hidden xl:block">
                 <p className="text-sm font-medium text-gray-900">{user?.name || 'Admin User'}</p>
                 <p className="text-xs text-gray-500">{user?.email}</p>
               </div>
               <button
                 onClick={handleLogout}
-                className="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors"
+                className="px-3 py-2 text-xs sm:text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors"
               >
                 Çıkış
               </button>
@@ -102,6 +116,46 @@ export default function AdminLayout({ children, user }) {
           </div>
         </div>
       </nav>
+
+      {/* Mobile Menu */}
+      {mobileMenuOpen && (
+        <div className="lg:hidden bg-white border-b border-gray-200 shadow-lg">
+          <div className="px-4 py-3 space-y-1">
+            <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Ana Menü</div>
+            {navigationTop.map((item) => (
+              <Link
+                key={item.name}
+                href={item.href}
+                onClick={() => setMobileMenuOpen(false)}
+                className={`flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  router.pathname === item.href
+                    ? 'bg-gradient-to-r from-indigo-100 to-purple-100 text-indigo-700'
+                    : 'text-gray-700 hover:bg-gray-100'
+                }`}
+              >
+                <span className="mr-2 text-base">{item.icon}</span>
+                <span>{item.name}</span>
+              </Link>
+            ))}
+            <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider mt-4 mb-2">Diğer</div>
+            {navigationBottom.map((item) => (
+              <Link
+                key={item.name}
+                href={item.href}
+                onClick={() => setMobileMenuOpen(false)}
+                className={`flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  router.pathname === item.href
+                    ? 'bg-gradient-to-r from-indigo-100 to-purple-100 text-indigo-700'
+                    : 'text-gray-700 hover:bg-gray-100'
+                }`}
+              >
+                <span className="mr-2 text-base">{item.icon}</span>
+                <span>{item.name}</span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {children}

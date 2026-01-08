@@ -42,7 +42,7 @@ export default function HesapSilme() {
 
               <h3 className="text-xl font-semibold text-gray-800 mt-6 mb-3">2. E-posta ile Silme Talebi</h3>
               <p className="text-gray-700 mb-4">
-                Uygulama içinden silemiyorsanız, destek@nerede.app adresine e-posta göndererek hesap silme talebinde bulunabilirsiniz. E-postanızda:
+                Uygulama içinden silemiyorsanız, destek@neredeapp.com.tr adresine e-posta göndererek hesap silme talebinde bulunabilirsiniz. E-postanızda:
               </p>
               <ul className="list-disc pl-6 space-y-2 text-gray-700 mb-4">
                 <li>E-posta adresiniz</li>
@@ -99,7 +99,7 @@ export default function HesapSilme() {
                 KVKK (Kişisel Verilerin Korunması Kanunu) kapsamında, kişisel verilerinizin silinmesini talep edebilirsiniz. Talebiniz için:
               </p>
               <ul className="list-disc pl-6 space-y-2 text-gray-700 mb-6">
-                <li>E-posta: destek@nerede.app</li>
+                <li>E-posta: destek@neredeapp.com.tr</li>
                 <li>Konu: "KVKK Veri Silme Talebi"</li>
                 <li>E-postanızda kimlik doğrulama bilgilerinizi belirtin</li>
               </ul>
@@ -111,8 +111,8 @@ export default function HesapSilme() {
               <div className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl p-6 border-l-4 border-indigo-600 mb-6">
                 <p className="text-gray-700 mb-2">
                   <strong className="text-gray-900">E-posta:</strong>{' '}
-                  <a href="mailto:destek@nerede.app" className="text-indigo-600 hover:text-indigo-700 font-medium">
-                    destek@nerede.app
+                  <a href="mailto:destek@neredeapp.com.tr" className="text-indigo-600 hover:text-indigo-700 font-medium">
+                    destek@neredeapp.com.tr
                   </a>
                 </p>
                 <p className="text-gray-700">
