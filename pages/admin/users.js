@@ -18,6 +18,19 @@ export default function UsersPage() {
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [newPassword, setNewPassword] = useState('');
+  const [showAddModal, setShowAddModal] = useState(false);
+  const initialAddForm = {
+    name: '',
+    email: '',
+    phone: '',
+    city: '',
+    role: 'user',
+    points: 0,
+    level: 1,
+    password: '',
+    confirmPassword: ''
+  };
+  const [addFormData, setAddFormData] = useState(initialAddForm);
   const [editFormData, setEditFormData] = useState({
     name: '',
     email: '',
@@ -109,15 +122,81 @@ export default function UsersPage() {
 
   const handleDeleteUser = async (userId) => {
     if (!confirm('Bu kullanıcıyı silmek istediğinizden emin misiniz?')) return;
-    
+
     try {
-      await deleteDoc(doc(db, 'users', userId));
+      const adminToken = await auth.currentUser.getIdToken();
+      const response = await fetch('/api/admin/users', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ adminToken, userId })
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || 'Kullanıcı silinemedi');
+      }
+
       toast.success('Kullanıcı silindi');
       await loadUsers();
       setShowModal(false);
     } catch (error) {
       console.error('Error deleting user:', error);
       toast.error('Kullanıcı silinirken hata oluştu');
+    }
+  };
+
+  const handleAddUser = async (e) => {
+    e.preventDefault();
+    if (!addFormData.name.trim()) {
+      toast.error('İsim zorunludur');
+      return;
+    }
+    if (!addFormData.email.trim()) {
+      toast.error('E-posta zorunludur');
+      return;
+    }
+    if (addFormData.password.length < 6) {
+      toast.error('Şifre en az 6 karakter olmalıdır');
+      return;
+    }
+    if (addFormData.password !== addFormData.confirmPassword) {
+      toast.error('Şifreler eşleşmiyor');
+      return;
+    }
+
+    try {
+      const adminToken = await auth.currentUser.getIdToken();
+      const response = await fetch('/api/admin/users', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          adminToken,
+          user: {
+            name: addFormData.name,
+            email: addFormData.email,
+            phone: addFormData.phone,
+            city: addFormData.city,
+            role: addFormData.role,
+            points: parseInt(addFormData.points, 10) || 0,
+            level: parseInt(addFormData.level, 10) || 1,
+            password: addFormData.password
+          }
+        })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Kullanıcı eklenemedi');
+      }
+
+      toast.success('Kullanıcı eklendi');
+      setShowAddModal(false);
+      setAddFormData(initialAddForm);
+      await loadUsers();
+    } catch (error) {
+      console.error('Error adding user:', error);
+      toast.error(error.message || 'Kullanıcı eklenirken hata oluştu');
     }
   };
 
@@ -231,9 +310,17 @@ export default function UsersPage() {
 
   return (
     <AdminLayout user={user}>
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold text-gray-900">Kullanıcı Yönetimi</h1>
-        <p className="text-gray-600 mt-2">Tüm kullanıcıları görüntüle ve yönet</p>
+      <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">Kullanıcı Yönetimi</h1>
+          <p className="text-gray-600 mt-2">Tüm kullanıcıları görüntüle ve yönet</p>
+        </div>
+        <button
+          onClick={() => setShowAddModal(true)}
+          className="inline-flex items-center justify-center px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 font-medium shadow-sm"
+        >
+          + Yeni Kullanıcı
+        </button>
       </div>
 
       {/* İstatistikler */}
@@ -653,6 +740,150 @@ export default function UsersPage() {
                   Kaydet
                 </button>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Add User Modal */}
+      {showAddModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6">
+              <div className="flex justify-between items-start mb-6">
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-900">Yeni Kullanıcı Ekle</h2>
+                  <p className="text-sm text-gray-500 mt-1">
+                    Kullanıcı oluşturulduğunda e-posta ve şifre ile giriş yapabilir.
+                  </p>
+                </div>
+                <button
+                  onClick={() => {
+                    setShowAddModal(false);
+                    setAddFormData(initialAddForm);
+                  }}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+
+              <form onSubmit={handleAddUser} className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="col-span-2">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">İsim Soyisim *</label>
+                    <input
+                      type="text"
+                      value={addFormData.name}
+                      onChange={(e) => setAddFormData({ ...addFormData, name: e.target.value })}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">E-posta *</label>
+                    <input
+                      type="email"
+                      value={addFormData.email}
+                      onChange={(e) => setAddFormData({ ...addFormData, email: e.target.value })}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Telefon</label>
+                    <input
+                      type="text"
+                      value={addFormData.phone}
+                      onChange={(e) => setAddFormData({ ...addFormData, phone: e.target.value })}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      placeholder="+905xxxxxxxxx"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Şehir</label>
+                    <input
+                      type="text"
+                      value={addFormData.city}
+                      onChange={(e) => setAddFormData({ ...addFormData, city: e.target.value })}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Rol</label>
+                    <select
+                      value={addFormData.role}
+                      onChange={(e) => setAddFormData({ ...addFormData, role: e.target.value })}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    >
+                      <option value="user">Kullanıcı</option>
+                      <option value="merchant">İşletme</option>
+                      <option value="admin">Admin</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Puan</label>
+                    <input
+                      type="number"
+                      min="0"
+                      value={addFormData.points}
+                      onChange={(e) => setAddFormData({ ...addFormData, points: e.target.value })}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Seviye</label>
+                    <input
+                      type="number"
+                      min="1"
+                      value={addFormData.level}
+                      onChange={(e) => setAddFormData({ ...addFormData, level: e.target.value })}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Şifre *</label>
+                    <input
+                      type="password"
+                      value={addFormData.password}
+                      onChange={(e) => setAddFormData({ ...addFormData, password: e.target.value })}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Şifre Tekrar *</label>
+                    <input
+                      type="password"
+                      value={addFormData.confirmPassword}
+                      onChange={(e) => setAddFormData({ ...addFormData, confirmPassword: e.target.value })}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="flex gap-3 pt-4 border-t">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowAddModal(false);
+                      setAddFormData(initialAddForm);
+                    }}
+                    className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
+                  >
+                    İptal
+                  </button>
+                  <button
+                    type="submit"
+                    className="flex-1 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
+                  >
+                    Kullanıcı Oluştur
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
         </div>

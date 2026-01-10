@@ -80,7 +80,7 @@ export default function BusinessLanding() {
               İşletmeler için nerede?
             </p>
             <h1 className="text-4xl sm:text-5xl font-extrabold leading-tight mb-6">
-              Şehrinizin <span className="text-blue-200">sadakat motoru</span> olun
+              Şehrinizin <span className="text-blue-200">popüler mekanı</span> olun
             </h1>
             <p className="text-lg text-blue-100 mb-8">
               nerede?, fiziksel mekanların check-in, puan ve kampanya deneyimleriyle sadık topluluklar oluşturmasını sağlar.

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { onAuthStateChanged } from 'firebase/auth';
-import { doc, getDoc, collection, getDocs, query, where, updateDoc } from 'firebase/firestore';
+import { doc, getDoc, collection, getDocs, query, where, updateDoc, addDoc, deleteDoc, serverTimestamp } from 'firebase/firestore';
 import { auth, db } from '../../lib/firebase';
 import AdminLayout from '../../components/AdminLayout';
 import toast from 'react-hot-toast';
@@ -13,7 +13,32 @@ export default function MerchantsPage() {
   const [selectedMerchant, setSelectedMerchant] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [merchantVenues, setMerchantVenues] = useState([]);
+  const [venueFormData, setVenueFormData] = useState({
+    name: '',
+    category: 'Restoran',
+    city: '',
+    address: '',
+    phone: '',
+    points: 10,
+    discount: '',
+    hours: '09:00 - 22:00'
+  });
+  const [addingVenue, setAddingVenue] = useState(false);
   const router = useRouter();
+
+  const categories = ['Restoran', 'Kafe', 'Bar', 'Müze', 'Park', 'Alışveriş', 'Spor', 'Eğlence', 'Diğer'];
+  const cities = [
+    'Adana', 'Adıyaman', 'Afyonkarahisar', 'Ağrı', 'Aksaray', 'Amasya', 'Ankara', 'Antalya', 
+    'Ardahan', 'Artvin', 'Aydın', 'Balıkesir', 'Bartın', 'Batman', 'Bayburt', 'Bilecik', 
+    'Bingöl', 'Bitlis', 'Bolu', 'Burdur', 'Bursa', 'Çanakkale', 'Çankırı', 'Çorum', 
+    'Denizli', 'Diyarbakır', 'Düzce', 'Edirne', 'Elazığ', 'Erzincan', 'Erzurum', 'Eskişehir', 
+    'Gaziantep', 'Giresun', 'Gümüşhane', 'Hakkari', 'Hatay', 'Iğdır', 'Isparta', 'İstanbul', 
+    'İzmir', 'Kahramanmaraş', 'Karabük', 'Karaman', 'Kars', 'Kastamonu', 'Kayseri', 'Kırıkkale', 
+    'Kırklareli', 'Kırşehir', 'Kilis', 'Kocaeli', 'Konya', 'Kütahya', 'Malatya', 'Manisa', 
+    'Mardin', 'Mersin', 'Muğla', 'Muş', 'Nevşehir', 'Niğde', 'Ordu', 'Osmaniye', 
+    'Rize', 'Sakarya', 'Samsun', 'Siirt', 'Sinop', 'Sivas', 'Şanlıurfa', 'Şırnak', 
+    'Tekirdağ', 'Tokat', 'Trabzon', 'Tunceli', 'Uşak', 'Van', 'Yalova', 'Yozgat', 'Zonguldak'
+  ];
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
@@ -46,8 +71,86 @@ export default function MerchantsPage() {
     }
   };
 
+  const handleAddVenueToMerchant = async (e) => {
+    e.preventDefault();
+    if (!selectedMerchant) return;
+
+    if (!venueFormData.name.trim()) {
+      toast.error('Mekan adı zorunludur');
+      return;
+    }
+    if (!venueFormData.address.trim()) {
+      toast.error('Adres zorunludur');
+      return;
+    }
+
+    try {
+      setAddingVenue(true);
+      await addDoc(collection(db, 'venues'), {
+        name: venueFormData.name.trim(),
+        category: venueFormData.category,
+        city: venueFormData.city || selectedMerchant.city || 'İstanbul',
+        address: venueFormData.address.trim(),
+        phone: venueFormData.phone?.trim() || null,
+        points: parseInt(venueFormData.points, 10) || 0,
+        discount: venueFormData.discount?.trim() || '',
+        hours: venueFormData.hours?.trim() || '09:00 - 22:00',
+        rating: 4.5,
+        totalScans: 0,
+        active: true,
+        image: 'https://via.placeholder.com/400x300',
+        merchantId: selectedMerchant.id,
+        merchantName: selectedMerchant.name || selectedMerchant.email,
+        merchantEmail: selectedMerchant.email,
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp()
+      });
+
+      toast.success('Mekan eklendi');
+      setVenueFormData({
+        name: '',
+        category: venueFormData.category,
+        city: venueFormData.city,
+        address: '',
+        phone: venueFormData.phone,
+        points: venueFormData.points,
+        discount: '',
+        hours: '09:00 - 22:00'
+      });
+      await handleViewMerchant(selectedMerchant);
+    } catch (error) {
+      console.error('Error adding venue:', error);
+      toast.error('Mekan eklenirken hata oluştu');
+    } finally {
+      setAddingVenue(false);
+    }
+  };
+
+  const handleDeleteMerchantVenue = async (venueId) => {
+    if (!confirm('Bu mekanı silmek istediğinizden emin misiniz?')) return;
+
+    try {
+      await deleteDoc(doc(db, 'venues', venueId));
+      toast.success('Mekan silindi');
+      setMerchantVenues((prev) => prev.filter((venue) => venue.id !== venueId));
+    } catch (error) {
+      console.error('Error deleting venue:', error);
+      toast.error('Mekan silinirken hata oluştu');
+    }
+  };
+
   const handleViewMerchant = async (merchant) => {
     setSelectedMerchant(merchant);
+    setVenueFormData({
+      name: '',
+      category: 'Restoran',
+      city: merchant.city || 'İstanbul',
+      address: '',
+      phone: merchant.phone || '',
+      points: 10,
+      discount: '',
+      hours: '09:00 - 22:00'
+    });
     
     // İşletmeye ait mekanları yükle
     try {
@@ -247,14 +350,121 @@ export default function MerchantsPage() {
                           <div>
                             <p className="font-medium text-gray-900">{venue.name}</p>
                             <p className="text-sm text-gray-600">{venue.category} • {venue.city}</p>
+                            <p className="text-xs text-gray-500">{venue.address}</p>
                           </div>
-                          <span className="text-sm text-gray-500">{venue.totalScans || 0} check-in</span>
+                          <div className="flex items-center gap-3">
+                            <span className="text-sm text-gray-500">{venue.totalScans || 0} check-in</span>
+                            <button
+                              onClick={() => handleDeleteMerchantVenue(venue.id)}
+                              className="text-red-600 hover:text-red-800 text-xs font-medium"
+                            >
+                              Sil
+                            </button>
+                          </div>
                         </div>
                       ))}
                     </div>
                   ) : (
                     <p className="text-gray-500 text-sm">Henüz mekan eklenmemiş</p>
                   )}
+                </div>
+
+                {/* Yeni Mekan Ekle */}
+                <div className="pt-4 border-t">
+                  <h4 className="font-semibold text-gray-900 mb-3">İşletmeye Yeni Mekan Ekle</h4>
+                  <form onSubmit={handleAddVenueToMerchant} className="space-y-3">
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="col-span-2">
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Mekan Adı *</label>
+                        <input
+                          type="text"
+                          value={venueFormData.name}
+                          onChange={(e) => setVenueFormData({ ...venueFormData, name: e.target.value })}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Kategori *</label>
+                        <select
+                          value={venueFormData.category}
+                          onChange={(e) => setVenueFormData({ ...venueFormData, category: e.target.value })}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                          {categories.map((cat) => (
+                            <option key={cat} value={cat}>{cat}</option>
+                          ))}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Şehir *</label>
+                        <select
+                          value={venueFormData.city}
+                          onChange={(e) => setVenueFormData({ ...venueFormData, city: e.target.value })}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                          {cities.map((city) => (
+                            <option key={city} value={city}>{city}</option>
+                          ))}
+                        </select>
+                      </div>
+                      <div className="col-span-2">
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Adres *</label>
+                        <input
+                          type="text"
+                          value={venueFormData.address}
+                          onChange={(e) => setVenueFormData({ ...venueFormData, address: e.target.value })}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Telefon</label>
+                        <input
+                          type="text"
+                          value={venueFormData.phone}
+                          onChange={(e) => setVenueFormData({ ...venueFormData, phone: e.target.value })}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Puan</label>
+                        <input
+                          type="number"
+                          min="0"
+                          value={venueFormData.points}
+                          onChange={(e) => setVenueFormData({ ...venueFormData, points: e.target.value })}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">İndirim</label>
+                        <input
+                          type="text"
+                          value={venueFormData.discount}
+                          onChange={(e) => setVenueFormData({ ...venueFormData, discount: e.target.value })}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="%10 indirim"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Çalışma Saatleri</label>
+                        <input
+                          type="text"
+                          value={venueFormData.hours}
+                          onChange={(e) => setVenueFormData({ ...venueFormData, hours: e.target.value })}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                      </div>
+                    </div>
+                    <button
+                      type="submit"
+                      disabled={addingVenue}
+                      className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium disabled:opacity-60"
+                    >
+                      {addingVenue ? 'Ekleniyor...' : 'Mekan Ekle'}
+                    </button>
+                  </form>
                 </div>
 
                 {/* Onay Butonları */}
